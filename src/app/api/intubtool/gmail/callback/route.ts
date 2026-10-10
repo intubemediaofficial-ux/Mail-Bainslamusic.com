@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const state = q.get("state");
   const [stateUser, , target] = (state || "").split(".");
   const onBehalf = !!target;
-  const back = new URL(scope ? (onBehalf ? "/intubtool/multi-send/accounts" : "/intubtool/settings") : "/intubtool/login", baseUrlFor(s));
+  const back = new URL(scope ? (onBehalf ? "/multi-send/accounts" : "/settings") : "/login", baseUrlFor(s));
   const done = (key: "gmail" | "gmail_error", value: string) => {
     back.searchParams.set(key, value);
     const res = NextResponse.redirect(back);

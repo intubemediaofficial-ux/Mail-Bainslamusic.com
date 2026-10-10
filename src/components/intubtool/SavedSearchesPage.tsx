@@ -46,7 +46,7 @@ export default function SavedSearchesPage() {
       <PageHeader
         title="Saved Searches"
         description="Save any lead search and it re-runs automatically on your schedule. New people found land in Leads Database (and the same list)."
-        actions={<Link href="/intubtool/search"><Button><Search className="h-4 w-4" /> New search</Button></Link>}
+        actions={<Link href="/search"><Button><Search className="h-4 w-4" /> New search</Button></Link>}
       />
       <Card className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-sm">

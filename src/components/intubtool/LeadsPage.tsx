@@ -281,7 +281,7 @@ export default function LeadsPage({ isAdmin = false }: { isAdmin?: boolean }) {
               {!filter && (
                 <div className="mt-3 flex justify-center gap-2">
                   <Button onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Import your SalesQL export</Button>
-                  <a href="/intubtool/search"><Button variant="secondary"><Search className="h-4 w-4" /> Run a LinkedIn search</Button></a>
+                  <a href="/search"><Button variant="secondary"><Search className="h-4 w-4" /> Run a LinkedIn search</Button></a>
                 </div>
               )}
             </Empty>
@@ -383,7 +383,7 @@ export default function LeadsPage({ isAdmin = false }: { isAdmin?: boolean }) {
         createList={createList}
         onClose={() => {
           setImportOpen(false);
-          if (sp.get("import")) router.replace("/intubtool/leads");
+          if (sp.get("import")) router.replace("/leads");
         }}
         onDone={(r) => {
           success(`Imported: ${r.created} new, ${r.updated} merged${r.addedToList ? ` · ${r.addedToList} in list` : ""}`);

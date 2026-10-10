@@ -35,7 +35,7 @@ export default function MultiSendPage() {
     setBusy("new");
     try {
       const b = await api<{ id: string }>("/api/intubtool/blasts", { method: "POST", body: JSON.stringify({ name: name.trim() || `List ${new Date().toLocaleDateString()}` }) });
-      router.push(`/intubtool/multi-send/${b.id}`);
+      router.push(`/multi-send/${b.id}`);
     } catch (e) {
       error((e as Error).message);
     } finally {
@@ -64,7 +64,7 @@ export default function MultiSendPage() {
         description="Admin only. Upload a separate database, pick which connected Gmail accounts to include, set how many each sends, press Start — #1 takes the first range, #2 the next… Progress is remembered for the next run."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Link href="/intubtool/multi-send/accounts">
+            <Link href="/multi-send/accounts">
               <Button variant="secondary"><Activity className="h-4 w-4" /> Accounts health</Button>
             </Link>
             <Button onClick={() => setOpen(true)} loading={busy === "new"}>
@@ -86,7 +86,7 @@ export default function MultiSendPage() {
               <Card key={b.id} className="p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <Link href={`/intubtool/multi-send/${b.id}`} className="flex items-center gap-2 text-lg font-bold hover:text-cyan-300">
+                    <Link href={`/multi-send/${b.id}`} className="flex items-center gap-2 text-lg font-bold hover:text-cyan-300">
                       <Layers className="h-5 w-5 text-cyan-400" /> {b.name}
                     </Link>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-white/50">

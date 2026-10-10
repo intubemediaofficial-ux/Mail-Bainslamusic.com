@@ -125,7 +125,7 @@ export default function CampaignDetail({ id }: { id: string }) {
       if (action === "delete") {
         if (!confirm("Delete this campaign and its history?")) return;
         await api(`/api/intubtool/campaigns/${id}`, { method: "DELETE" });
-        router.push("/intubtool/campaigns");
+        router.push("/campaigns");
         return;
       }
       await api(`/api/intubtool/campaigns/${id}/action`, { method: "POST", body: JSON.stringify({ action }) });
@@ -204,7 +204,7 @@ export default function CampaignDetail({ id }: { id: string }) {
         }
         actions={
           <>
-            <Link href="/intubtool/campaigns"><Button variant="ghost"><ArrowLeft className="h-4 w-4" /> All campaigns</Button></Link>
+            <Link href="/campaigns"><Button variant="ghost"><ArrowLeft className="h-4 w-4" /> All campaigns</Button></Link>
             <a href={`/api/intubtool/campaigns/report?campaign=${c.id}&format=xlsx`} title="Excel: summary + replied, bounced and all sent mails"><Button variant="secondary"><Download className="h-4 w-4" /> Report</Button></a>
             {c.status === "running" ? (
               <Button variant="secondary" onClick={() => act("pause")} loading={busy === "pause"}><Pause className="h-4 w-4" /> Pause</Button>

@@ -5,6 +5,6 @@ import { redirect } from "next/navigation";
 export const metadata = { title: "Users" };
 
 export default async function Page() {
-  if (!(await requireAdmin())) redirect("/intubtool");
+  if (!(await requireAdmin())) redirect("/");
   return <UsersPage />;
 }

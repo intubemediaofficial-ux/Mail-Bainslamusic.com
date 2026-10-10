@@ -57,7 +57,7 @@ export default function MultiSendDetail({ id }: { id: string }) {
       if (action === "delete") {
         if (!confirm("Delete this list, its database and send history?")) return;
         await api(`/api/intubtool/blasts/${id}`, { method: "DELETE" });
-        router.push("/intubtool/multi-send");
+        router.push("/multi-send");
         return;
       }
       const r = await api<{ message: string }>(`/api/intubtool/blasts/${id}/action`, { method: "POST", body: JSON.stringify({ action }) });
@@ -76,7 +76,7 @@ export default function MultiSendDetail({ id }: { id: string }) {
   return (
     <>
       {toast}
-      <Link href="/intubtool/multi-send" className="mb-4 inline-flex items-center gap-1 text-sm text-white/50 hover:text-white">
+      <Link href="/multi-send" className="mb-4 inline-flex items-center gap-1 text-sm text-white/50 hover:text-white">
         <ArrowLeft className="h-4 w-4" /> All lists
       </Link>
       <PageHeader
@@ -221,7 +221,7 @@ function AccountsTab({ b, reload, notify }: { b: Blast; reload: () => void; noti
             Every Gmail connected by any user shows up here. <b className="text-white">Include</b> = use this account in this list. <b className="text-white">Per run</b> = how many leads it takes each Start. Next run: <b className="text-white">{total}</b> mails.
           </span>
           <div className="flex gap-2">
-            <Link href="/intubtool/multi-send/accounts"><Button variant="ghost"><Activity className="h-4 w-4" /> Accounts health</Button></Link>
+            <Link href="/multi-send/accounts"><Button variant="ghost"><Activity className="h-4 w-4" /> Accounts health</Button></Link>
             <Button variant="secondary" onClick={() => api(`/api/intubtool/blasts/${b.id}/action`, { method: "POST", body: JSON.stringify({ action: "sync-accounts" }) }).then(reload)}>
               <RefreshCw className="h-4 w-4" /> Refresh accounts
             </Button>

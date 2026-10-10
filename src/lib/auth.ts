@@ -16,7 +16,7 @@ const RECHECK_MS = 60_000;
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 },
-  pages: { signIn: "/intubtool/login" },
+  pages: { signIn: "/login" },
   providers: [
     CredentialsProvider({
       name: "Email",

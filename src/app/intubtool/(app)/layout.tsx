@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function IntubToolLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser();
-  if (!user) redirect("/intubtool/login?callbackUrl=/intubtool");
+  if (!user) redirect("/login?callbackUrl=/");
   const pendingUsers = user.role === "admin" ? await prisma.user.count({ where: { status: "pending" } }) : 0;
   return (
     <ToolShell userEmail={user.email} isAdmin={user.role === "admin"} pendingUsers={pendingUsers}>
