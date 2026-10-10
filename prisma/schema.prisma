@@ -1,0 +1,429 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  email      String    @unique
+  password   String
+  name       String?
+  role       String    @default("member") // admin | member
+  status     String    @default("pending") // pending | approved | rejected | disabled
+  shareData  Boolean   @default(false) // member may also see the shared (admin) leads / lists
+  approvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  settings   UserSetting[]
+  leads      Lead[]
+  lists      ContactList[]
+  jobs       SearchJob[]
+  campaigns  Campaign[]
+}
+
+// per-user overrides of ToolSetting (gmail connection, from name, bcc, signature, ...)
+model UserSetting {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key    String
+  value  String
+
+  @@unique([userId, key])
+}
+
+model SiteSetting {
+  key   String @id
+  value String
+}
+
+model Office {
+  id        String  @id @default(cuid())
+  label     String
+  city      String
+  country   String
+  lines     String
+  mapQuery  String
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+}
+
+model Service {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  title       String
+  short       String
+  description String
+  points      String
+  icon        String  @default("Sparkles")
+  accent      String  @default("from-fuchsia-500 to-purple-600")
+  sortOrder   Int     @default(0)
+  active      Boolean @default(true)
+}
+
+model Block {
+  id        String  @id @default(cuid())
+  section   String
+  icon      String?
+  title     String
+  text      String
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+
+  @@index([section])
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  category    String?
+  tags        String?
+  author      String?
+  metaTitle   String?
+  metaDesc    String?
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  service   String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ───────────────────────── IntubTool (lead research + outreach) ─────────────────────────
+
+model ToolSetting {
+  key   String @id
+  value String
+}
+
+model SearchJob {
+  id            String    @id @default(cuid())
+  name          String?
+  ownerId       String? // null = shared (admin) data
+  owner         User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  companies     String // JSON string[]
+  keywords      String // JSON string[]
+  source        String    @default("linkedin") // linkedin | web
+  maxPerCompany Int       @default(25)
+  listId        String? // contact list found people are saved into
+  mode          String    @default("company") // company | title (designation-only, no companies)
+  filters       String? // JSON: { countries?: string[]; regions?: string[]; industries?: string[]; hasEmail?: boolean; hasPhone?: boolean }
+  status        String    @default("queued") // queued | running | done | failed | cancelled
+  progress      Int       @default(0)
+  total         Int       @default(0)
+  foundCount    Int       @default(0)
+  log           String    @default("")
+  error         String?
+  createdAt     DateTime  @default(now())
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  leads         Lead[]
+}
+
+model Lead {
+  id            String    @id @default(cuid())
+  jobId         String?
+  job           SearchJob? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  ownerId       String? // null = shared (admin) data
+  owner         User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  company       String
+  companyDomain String?
+  companyUrl    String?
+  fullName      String
+  firstName     String?
+  lastName      String?
+  title         String?
+  headline      String?
+  location      String?
+  linkedinUrl   String?
+  category      String?
+  source        String    @default("manual") // linkedin | salesql | salesql_sync | web | import | manual
+  salesqlUid    String?
+  salesqlSyncedAt DateTime?
+  email         String?
+  emailStatus   String?
+  emails        String? // JSON
+  phone         String?
+  phones        String? // JSON
+  enrichStatus  String    @default("none") // none | queued | done | not_found | error
+  enrichError   String?
+  enrichedAt    DateTime?
+  enrichRaw     String?
+  notes         String?
+  unsubscribed  Boolean   @default(false)
+  unsubToken    String    @unique @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  campaignLeads CampaignLead[]
+  messages      EmailMessage[]
+  lists         ContactListLead[]
+
+  @@index([company])
+  @@index([linkedinUrl])
+  @@index([email])
+  @@index([salesqlUid])
+  @@index([ownerId])
+}
+
+model ContactList {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  ownerId     String? // null = shared (admin) data
+  owner       User?             @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  leads       ContactListLead[]
+}
+
+model ContactListLead {
+  id      String      @id @default(cuid())
+  listId  String
+  list    ContactList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  leadId  String
+  lead    Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  addedAt DateTime    @default(now())
+
+  @@unique([listId, leadId])
+  @@index([leadId])
+}
+
+model Campaign {
+  id              String    @id @default(cuid())
+  name            String
+  ownerId         String? // null = admin's campaign (sends with the global Gmail connection)
+  owner           User?     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status          String    @default("draft") // draft | running | paused | completed
+  fromName        String?
+  replyTo         String?
+  cc              String?
+  bcc             String?
+  dailyLimit      Int       @default(40)
+  sendWindowStart Int       @default(9) // hour of day (server local time)
+  sendWindowEnd   Int       @default(18)
+  minGapSeconds   Int       @default(90)
+  trackOpens      Boolean   @default(true)
+  personalMode    Boolean   @default(false) // text-only, no pixel / unsubscribe header / footer — reads like a 1:1 mail
+  aiPersonalize   Boolean   @default(false)
+  aiInstructions  String?
+  stopOnReply     Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  steps           CampaignStep[]
+  leads           CampaignLead[]
+  messages        EmailMessage[]
+}
+
+model CampaignStep {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  order      Int
+  delayDays  Int      @default(0)
+  subject    String
+  body       String
+  attachments String? // JSON: [{ name, path, size, type }] — files under uploads/intubtool/attachments
+
+  @@unique([campaignId, order])
+}
+
+model CampaignLead {
+  id          String    @id @default(cuid())
+  campaignId  String
+  campaign    Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  leadId      String
+  lead        Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  status      String    @default("pending") // pending | active | completed | replied | bounced | unsubscribed | failed | stopped
+  currentStep Int       @default(0)
+  nextSendAt  DateTime?
+  lastSentAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@unique([campaignId, leadId])
+  @@index([status, nextSendAt])
+}
+
+model EmailMessage {
+  id            String    @id @default(cuid())
+  campaignId    String?
+  campaign      Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  leadId        String?
+  lead          Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  stepOrder     Int       @default(0)
+  messageId     String    @unique
+  toEmail       String
+  subject       String
+  bodyHtml      String
+  bodyText      String
+  status        String    @default("sent") // sent | failed | bounced
+  error         String?
+  spamScore     Int?
+  aiPersonalized Boolean  @default(false)
+  sentAt        DateTime  @default(now())
+  openCount     Int       @default(0)
+  firstOpenedAt DateTime?
+  lastOpenedAt  DateTime?
+  repliedAt     DateTime?
+  replySnippet  String?
+  bouncedAt     DateTime?
+  bounceReason  String?
+
+  @@index([campaignId, sentAt])
+  @@index([toEmail])
+}
+
+// ───────────── Multi-account send (admin-only, separate from campaigns) ─────────────
+
+model Blast {
+  id               String    @id @default(cuid())
+  name             String
+  status           String    @default("draft") // draft | running | idle | paused | completed
+  templates        String    @default("[]") // JSON [{subject, body}] — rotated across accounts (A/B)
+  followUpEnabled  Boolean   @default(false)
+  followUpDays     Int       @default(4)
+  followUpSubject  String    @default("")
+  followUpBody     String    @default("")
+  gapMinSeconds    Int       @default(120)
+  gapMaxSeconds    Int       @default(300)
+  sendWindowStart  Int       @default(9)
+  sendWindowEnd    Int       @default(18)
+  autoRunHour      Int? // null = manual Start only
+  lastAutoRunDate  String?
+  trackOpens       Boolean   @default(true)
+  trackClicks      Boolean   @default(true)
+  verifyBeforeSend Boolean   @default(true)
+  summaryEmail     String?
+  summaryHour      Int       @default(19)
+  lastSummaryDate  String?
+  lastRunAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  accounts         BlastAccount[]
+  leads            BlastLead[]
+  messages         BlastMessage[]
+}
+
+model BlastAccount {
+  id              String    @id @default(cuid())
+  blastId         String
+  blast           Blast     @relation(fields: [blastId], references: [id], onDelete: Cascade)
+  ownerKey        String // user id, or "global" for the admin Gmail
+  ownerId         String?
+  email           String
+  label           String?
+  order           Int
+  enabled         Boolean   @default(true)
+  quota           Int       @default(10)
+  warmup          Boolean   @default(false)
+  warmupStart     Int       @default(5)
+  warmupStep      Int       @default(5)
+  warmupEveryDays Int       @default(2)
+  warmupStartedAt DateTime?
+  nextAllowedAt   DateTime?
+  blockedUntil    DateTime?
+  lastError       String?
+  rangeStart      Int?
+  rangeEnd        Int?
+  leads           BlastLead[]
+  messages        BlastMessage[]
+
+  @@unique([blastId, ownerKey])
+}
+
+model BlastLead {
+  id             String    @id @default(cuid())
+  blastId        String
+  blast          Blast     @relation(fields: [blastId], references: [id], onDelete: Cascade)
+  serial         Int
+  email          String
+  fullName       String    @default("")
+  firstName      String?
+  company        String?
+  title          String?
+  phone          String?
+  extra          String? // JSON of other uploaded columns
+  status         String    @default("pending") // pending | queued | sent | replied | bounced | unsubscribed | failed | skipped | hold | invalid
+  statusNote     String?
+  verifyStatus   String    @default("none") // none | valid | risky | invalid
+  vip            Boolean   @default(false)
+  replyTag       String? // hot | cold
+  notes          String?
+  accountId      String?
+  account        BlastAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  sentAt         DateTime?
+  followUpAt     DateTime?
+  followUpSentAt DateTime?
+  repliedAt      DateTime?
+  bouncedAt      DateTime?
+  unsubToken     String    @unique @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  messages       BlastMessage[]
+
+  @@unique([blastId, serial])
+  @@unique([blastId, email])
+  @@index([blastId, status])
+  @@index([email])
+}
+
+model BlastMessage {
+  id             String    @id @default(cuid())
+  blastId        String
+  blast          Blast     @relation(fields: [blastId], references: [id], onDelete: Cascade)
+  leadId         String
+  lead           BlastLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  accountId      String?
+  account        BlastAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  ownerKey       String
+  fromEmail      String
+  kind           String    @default("initial") // initial | followup | test
+  variant        Int       @default(0)
+  messageId      String    @unique
+  toEmail        String
+  subject        String
+  bodyText       String
+  status         String    @default("sent") // sent | failed | bounced
+  error          String?
+  sentAt         DateTime  @default(now())
+  openCount      Int       @default(0)
+  firstOpenedAt  DateTime?
+  clickCount     Int       @default(0)
+  firstClickedAt DateTime?
+  repliedAt      DateTime?
+  replySnippet   String?
+  bouncedAt      DateTime?
+  bounceReason   String?
+
+  @@index([blastId, sentAt])
+  @@index([ownerKey, sentAt])
+  @@index([toEmail])
+}
+
+/// Gmail account lifecycle log (disconnects, blocks, health checks, alerts) per sender (ownerKey = user id or "global").
+model AccountEvent {
+  id        String   @id @default(cuid())
+  ownerKey  String
+  email     String
+  type      String // disconnected | reconnected | blocked | health_ok | health_fail | oauth_fallback | reconnect_link | alert
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([ownerKey, createdAt])
+  @@index([createdAt])
+}
