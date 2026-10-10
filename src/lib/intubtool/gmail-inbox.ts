@@ -34,7 +34,7 @@ export function listLabels(owner: string | null): Promise<Label[]> {
     const out = boxes
       .filter((b) => !b.flags?.has("\\Noselect"))
       .map((b) => {
-        const su = b.path.toUpperCase() === "INBOX" ? "\\Inbox" : b.specialUse || null;
+        const su = b.path.toUpperCase() === "INBOX" ? "\\Inbox" : b.specialUse || (b.flags?.has("\\Important") || b.path === "[Gmail]/Important" ? "\\Important" : null);
         return {
           path: b.path,
           name: (su && NAMES[su]) || b.path,
