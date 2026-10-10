@@ -211,6 +211,7 @@ model Campaign {
   owner           User?          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   status          String         @default("draft") // draft | running | paused | completed
   fromName        String?
+  fromEmail       String? // Gmail "Send mail as" alias; null = connected Gmail address
   replyTo         String?
   cc              String?
   bcc             String?

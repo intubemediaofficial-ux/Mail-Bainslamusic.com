@@ -123,3 +123,22 @@ export function getMessage(owner: string | null, path: string, uid: number) {
     }
   });
 }
+
+const EMAIL_RE = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
+
+/** Addresses offered as "Send from": the connected Gmail + every Gmail label named like an email address. */
+export function listSenders(owner: string | null): Promise<{ main: string; aliases: string[] }> {
+  return withClient(owner, async (c) => {
+    const s = await getSettings(owner);
+    const main = (s.gmail_user || "").toLowerCase();
+    const boxes = await c.list();
+    const aliases = Array.from(
+      new Set(
+        boxes
+          .map((b) => (b.name || b.path.split(b.delimiter || "/").pop() || "").trim().toLowerCase())
+          .filter((n) => EMAIL_RE.test(n) && n !== main)
+      )
+    ).sort();
+    return { main, aliases };
+  });
+}

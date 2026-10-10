@@ -7,6 +7,7 @@ export function campaignData(b: Record<string, unknown>) {
   return {
     name: str(b.name, 150),
     fromName: str(b.fromName, 120) || null,
+    fromEmail: /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(str(b.fromEmail, 200)) ? str(b.fromEmail, 200).toLowerCase() : null,
     replyTo: str(b.replyTo, 200) || null,
     cc: str(b.cc, 500) || null,
     bcc: str(b.bcc, 500) || null,

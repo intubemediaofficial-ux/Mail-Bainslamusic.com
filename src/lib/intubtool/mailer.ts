@@ -79,6 +79,8 @@ export type SendInput = {
   text: string;
   messageId: string;
   fromName?: string | null;
+  /** Gmail "Send mail as" alias; must be added in Gmail settings or Gmail sends from the main address */
+  fromEmail?: string | null;
   replyTo?: string | null;
   cc?: string | null;
   bcc?: string | null;
@@ -91,7 +93,7 @@ export async function sendMail(input: SendInput, settings?: ToolSettings) {
   const s = settings ?? (await getSettings());
   const { user } = requireGmail(s);
   const info = await withSmtp(s, (transport) => transport.sendMail({
-    from: input.fromName ? `"${input.fromName.replace(/"/g, "")}" <${user}>` : user,
+    from: input.fromName ? `"${input.fromName.replace(/"/g, "")}" <${input.fromEmail || user}>` : input.fromEmail || user,
     to: input.to,
     cc: input.cc || undefined,
     bcc: input.bcc || undefined,

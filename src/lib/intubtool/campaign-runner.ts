@@ -126,6 +126,7 @@ async function sendToLead(campaign: Campaign & { steps: CampaignStep[] }, cl: { 
         text: mail.text,
         messageId,
         fromName: campaign.fromName || s.from_name,
+        fromEmail: campaign.fromEmail,
         replyTo: campaign.replyTo || s.reply_to,
         cc: campaign.cc,
         bcc: campaign.bcc || s.bcc_email,
