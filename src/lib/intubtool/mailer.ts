@@ -9,7 +9,7 @@ import { markBlastLead } from "./blast-runner";
 
 export class MailConfigError extends Error {}
 
-function requireGmail(s: ToolSettings) {
+export function requireGmail(s: ToolSettings) {
   const mode = gmailAuthMode(s);
   if (!mode) throw new MailConfigError("Gmail not connected — use “Connect with Google” (or add an App Password) in Settings.");
   return { user: (mode === "oauth" && s.gmail_oauth_email) || s.gmail_user, mode };
@@ -118,7 +118,7 @@ export async function verifySmtp(s?: ToolSettings) {
 
 const SYNC_KEY = "imap_last_uid";
 
-async function imapClient(s: ToolSettings) {
+export async function imapClient(s: ToolSettings) {
   const auth = await gmailAuth(s);
   return new ImapFlow({ host: "imap.gmail.com", port: 993, secure: true, auth, logger: false });
 }

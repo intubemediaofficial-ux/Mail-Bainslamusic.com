@@ -4,12 +4,13 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { LayoutDashboard, Search, Users, Mail, Settings, LogOut, Menu, X, ArrowLeft, UserCheck, Layers, CalendarCheck, BellRing } from "lucide-react";
+import { LayoutDashboard, Search, Users, Mail, Settings, LogOut, Menu, X, ArrowLeft, UserCheck, Layers, CalendarCheck, BellRing, Inbox } from "lucide-react";
 
 type NavItem = { href: string; label: string; icon: typeof Search; exact?: boolean; admin?: boolean };
 
 const nav: NavItem[] = [
   { href: "/intubtool", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/intubtool/inbox", label: "Gmail Inbox", icon: Inbox },
   { href: "/intubtool/search", label: "LinkedIn Search", icon: Search },
   { href: "/intubtool/leads", label: "Leads Database", icon: Users },
   { href: "/intubtool/saved-searches", label: "Saved Searches", icon: BellRing },
