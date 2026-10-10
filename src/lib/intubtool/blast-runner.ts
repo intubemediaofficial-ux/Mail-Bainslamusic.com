@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import type { Blast, BlastAccount, BlastLead } from "@prisma/client";
 import { getSettings, gmailConfigured, type ToolSettings } from "./settings";
 import { renderTemplate, textToHtml, type TemplateVars } from "./template";
+import { bookingLink } from "./booking";
 import { MailConfigError, baseUrl, newMessageId, sendMail } from "./mailer";
 import { isProviderRateLimit } from "./campaign-runner";
 import { verifyMany } from "./email-verify";
@@ -249,7 +250,7 @@ export async function renderBlastMail(b: Blast, a: BlastAccount, lead: BlastLead
   const first = kind === "followup" ? await prisma.blastMessage.findFirst({ where: { leadId: lead.id, kind: "initial", status: { not: "failed" } }, orderBy: { sentAt: "asc" } }) : null;
   const base = baseUrl(s);
   const unsub = `${base}/api/intubtool/bu/${lead.unsubToken}`;
-  const vars = blastVars(lead, { sender_name: s.from_name || a.label || "", sender_email: a.email, signature: s.signature || "", unsubscribe_url: unsub });
+  const vars = blastVars(lead, { sender_name: s.from_name || a.label || "", sender_email: a.email, signature: s.signature || "", unsubscribe_url: unsub, booking_link: bookingLink(s, lead.email, lead.fullName) });
   let subject = renderTemplate(tpl.subject, vars).trim();
   let body = renderTemplate(tpl.body, vars).trim();
   if (kind === "followup" && first && !subject) subject = first.subject.startsWith("Re:") ? first.subject : `Re: ${first.subject}`;
@@ -303,7 +304,7 @@ async function sendOne(b: Blast, a: BlastAccount, lead: BlastLead, kind: "initia
       const h = await import("./account-health");
       await h.logEvent(a.ownerId, a.email, "blocked", `${b.name}: ${msg.slice(0, 300)}`);
       await h.notifyAdmin(
-        `[IntubTool] Account #${a.order} ${a.email} blocked for 24h`,
+        `[Bainsla Mail Tool] Account #${a.order} ${a.email} blocked for 24h`,
         [`List: ${b.name}`, `Account: #${a.order} ${a.email}`, `Gmail said: ${msg.slice(0, 400)}`, `When: ${now.toLocaleString()}`, ``, `Its queued leads went back to the pool; other accounts keep sending. Unblock earlier from Multi-account Send → Accounts.`].join("\n"),
         { exclude: a.ownerId }
       );
@@ -359,7 +360,7 @@ async function dailySummary(b: Blast, now: Date) {
   const sender = accounts.find((a) => a.enabled && (!a.blockedUntil || a.blockedUntil <= now)) || accounts[0];
   const s = await getSettings(sender?.ownerId ?? null);
   if (!gmailConfigured(s)) return;
-  await sendMail({ to: b.summaryEmail, subject: `[IntubTool] ${b.name}: ${sent.length} sent, ${replies} replies, ${bounces} bounces today`, text: lines.join("\n"), messageId: newMessageId("bainslamusic.com") }, s).catch(() => undefined);
+  await sendMail({ to: b.summaryEmail, subject: `[Bainsla Mail Tool] ${b.name}: ${sent.length} sent, ${replies} replies, ${bounces} bounces today`, text: lines.join("\n"), messageId: newMessageId("bainslamusic.com") }, s).catch(() => undefined);
 }
 
 /** One scheduler tick: every enabled, unblocked account whose gap elapsed sends one mail (follow-ups due first, then its queued range). */

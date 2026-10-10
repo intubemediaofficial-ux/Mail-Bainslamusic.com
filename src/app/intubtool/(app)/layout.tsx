@@ -4,7 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import ToolShell from "@/components/intubtool/ToolShell";
 
-export const metadata: Metadata = { title: { default: "IntubTool", template: "%s · IntubTool" }, robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: { default: "Bainsla Mail Tool", template: "%s · Bainsla Mail Tool" }, robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function IntubToolLayout({ children }: { children: React.ReactNode }) {

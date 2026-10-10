@@ -11,7 +11,7 @@ export default function AuthCard({ title, subtitle, children }: { title: string;
           <Link href="/intubtool/login" className="flex items-center gap-2">
             <span className="h-9 w-9 rounded-lg bg-gradient-to-br from-cyan-400 via-sky-500 to-violet-600" />
             <span className="text-xl font-extrabold tracking-tight">
-              Intub<span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">Tool</span>
+              Bainsla <span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">Mail Tool</span>
             </span>
           </Link>
           <h1 className="mt-6 text-xl font-bold">{title}</h1>

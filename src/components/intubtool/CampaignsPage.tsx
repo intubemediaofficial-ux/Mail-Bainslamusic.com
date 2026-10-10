@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Mail, Play, Pause, Inbox, RefreshCw, Download } from "lucide-react";
 import { PageHeader, Card, Button, useToast, api } from "@/components/admin/ui";
 import { Badge, statusTone, Empty, timeAgo } from "./bits";
+import AiSequenceButton from "./AiSequenceButton";
 
 type Campaign = {
   id: string; name: string; status: string; dailyLimit: number; aiPersonalize: boolean; createdAt: string;
@@ -85,6 +86,7 @@ export default function CampaignsPage() {
           <>
             <a href="/api/intubtool/campaigns/report?format=xlsx" title="Excel: campaign summary + replied, bounced and all sent mails"><Button variant="secondary"><Download className="h-4 w-4" /> Export report</Button></a>
             <Button variant="secondary" onClick={sync} loading={busy === "sync"}><Inbox className="h-4 w-4" /> Check inbox now</Button>
+            <AiSequenceButton onError={error} />
             <Button onClick={create} loading={busy === "new"}><Plus className="h-4 w-4" /> New campaign</Button>
           </>
         }

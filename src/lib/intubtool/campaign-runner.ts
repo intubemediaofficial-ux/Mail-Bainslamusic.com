@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import type { Campaign, CampaignStep, Lead } from "@prisma/client";
 import { getSettings, gmailConfigured, type ToolSettings } from "./settings";
 import { leadVars, renderTemplate, textToHtml } from "./template";
+import { bookingLink } from "./booking";
 import { MailConfigError, newMessageId, sendMail, trackingPixel, unsubscribeUrl } from "./mailer";
 import { mailAttachments, parseAttachments } from "./attachments";
 import { personalizeEmail } from "./ai";
@@ -46,7 +47,7 @@ export async function buildEmail(
   opts: { messageDbId?: string; firstMessage?: { messageId: string; subject: string } | null; skipAi?: boolean }
 ): Promise<RenderedEmail> {
   const unsub = unsubscribeUrl(s, lead.unsubToken);
-  const vars = leadVars(lead, { unsubscribe_url: unsub, signature: s.signature || "", sender_name: campaign.fromName || s.from_name || "" });
+  const vars = leadVars(lead, { unsubscribe_url: unsub, signature: s.signature || "", sender_name: campaign.fromName || s.from_name || "", booking_link: bookingLink(s, lead.email, lead.fullName) });
 
   let subject = renderTemplate(step.subject, vars).trim();
   let body = renderTemplate(step.body, vars).trim();
@@ -156,7 +157,7 @@ async function sendToLead(campaign: Campaign & { steps: CampaignStep[] }, cl: { 
       await prisma.campaign.update({ where: { id: campaign.id }, data: { status: "paused" } });
       const h = await import("./account-health");
       await h.notifyAdmin(
-        `[IntubTool] Campaign "${campaign.name}" paused: Gmail login failed`,
+        `[Bainsla Mail Tool] Campaign "${campaign.name}" paused: Gmail login failed`,
         [`Account: ${s.gmail_oauth_email || s.gmail_user || "not connected"}`, `Error: ${msg.slice(0, 400)}`, `When: ${new Date().toLocaleString()}`, ``, `Reconnect Gmail in Settings, then Resume the campaign.`].join("\n"),
         { exclude: campaign.ownerId }
       );

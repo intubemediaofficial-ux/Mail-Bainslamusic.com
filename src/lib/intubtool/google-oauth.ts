@@ -137,7 +137,7 @@ export async function markDisconnected(owner: string | null, reason = "Google ac
   const who = owner ? await prisma.user.findUnique({ where: { id: owner }, select: { email: true, name: true } }) : null;
   const backup = s.gmail_app_password ? "An App Password is saved for this account, so sending continues through it." : "No App Password backup — this account cannot send until it is reconnected.";
   await h.notifyAdmin(
-    `[IntubTool] Gmail disconnected: ${email}`,
+    `[Bainsla Mail Tool] Gmail disconnected: ${email}`,
     [
       `Account: ${email}`,
       `User: ${who ? `${who.name || who.email} (${who.email})` : "Admin (global)"}`,
@@ -146,7 +146,7 @@ export async function markDisconnected(owner: string | null, reason = "Google ac
       ``,
       backup,
       ``,
-      `Fix: IntubTool → Settings → Gmail → “Connect with Google” (or Multi-account Send → Accounts health → Send reconnect link / Connect).`,
+      `Fix: Bainsla Mail Tool → Settings → Gmail → “Connect with Google” (or Multi-account Send → Accounts health → Send reconnect link / Connect).`,
     ].join("\n"),
     { exclude: owner }
   );

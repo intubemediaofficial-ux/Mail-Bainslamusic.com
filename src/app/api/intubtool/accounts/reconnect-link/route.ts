@@ -29,21 +29,21 @@ export async function POST(req: Request) {
   await sendMail(
     {
       to,
-      subject: `IntubTool: please reconnect ${gmailEmail}`,
+      subject: `Bainsla Mail Tool: please reconnect ${gmailEmail}`,
       text: [
         `Hi ${name},`,
         ``,
-        `The Gmail account ${gmailEmail} is no longer connected to IntubTool, so no emails can be sent from it.`,
+        `The Gmail account ${gmailEmail} is no longer connected to Bainsla Mail Tool, so no emails can be sent from it.`,
         ``,
-        `Reconnect in one click (sign in with your IntubTool login if asked, then approve Google access):`,
+        `Reconnect in one click (sign in with your Bainsla Mail Tool login if asked, then approve Google access):`,
         link,
         ``,
         `If Google shows “Google hasn’t verified this app”, click Advanced → Go to mail.bainslamusic.com → Allow.`,
         ``,
-        `— IntubTool (${admin.email})`,
+        `— Bainsla Mail Tool (${admin.email})`,
       ].join("\n"),
       messageId: newMessageId("bainslamusic.com"),
-      fromName: "IntubTool",
+      fromName: "Bainsla Mail Tool",
       replyTo: admin.email,
     },
     sender

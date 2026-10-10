@@ -110,7 +110,7 @@ async function deliver(a: Alert) {
       const s = await getSettings(o.owner);
       if (!gmailConfigured(s)) continue;
       try {
-        await sendMail({ to, subject: a.subject, text: a.text, messageId: newMessageId("bainslamusic.com"), fromName: "IntubTool alerts" }, s);
+        await sendMail({ to, subject: a.subject, text: a.text, messageId: newMessageId("bainslamusic.com"), fromName: "Bainsla Mail Tool alerts" }, s);
         email = true;
         break;
       } catch (e) {
@@ -130,7 +130,7 @@ async function deliver(a: Alert) {
 
 /** Sends a test alert and reports what worked (used by the Settings "Send test alert" button). */
 export async function testAlert() {
-  return deliver({ subject: "[IntubTool] Test alert", text: `This is a test from IntubTool account alerts (${new Date().toLocaleString()}). If you got this, disconnect/block alerts will reach you here.` });
+  return deliver({ subject: "[Bainsla Mail Tool] Test alert", text: `This is a test from Bainsla Mail Tool account alerts (${new Date().toLocaleString()}). If you got this, disconnect/block alerts will reach you here.` });
 }
 
 /* ───────────────────────── health check ───────────────────────── */
@@ -173,8 +173,8 @@ export async function runHealthCheck(opts: { alert?: boolean } = {}): Promise<Ch
   const failed = out.filter((r) => r.status === "fail");
   if (opts.alert && failed.length) {
     await notifyAdmin(
-      `[IntubTool] ${failed.length} Gmail account${failed.length > 1 ? "s" : ""} need attention`,
-      [`Daily health check (${new Date().toLocaleString()}) — these accounts could not sign in:`, "", ...failed.map((f) => `• ${f.email} (${f.name || f.userEmail}): ${f.error}`), "", "Fix: open IntubTool → Multi-account Send → Accounts health, or ask the member to reconnect in Settings → Gmail."].join("\n")
+      `[Bainsla Mail Tool] ${failed.length} Gmail account${failed.length > 1 ? "s" : ""} need attention`,
+      [`Daily health check (${new Date().toLocaleString()}) — these accounts could not sign in:`, "", ...failed.map((f) => `• ${f.email} (${f.name || f.userEmail}): ${f.error}`), "", "Fix: open Bainsla Mail Tool → Multi-account Send → Accounts health, or ask the member to reconnect in Settings → Gmail."].join("\n")
     );
   }
   return out;
