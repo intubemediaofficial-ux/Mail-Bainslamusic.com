@@ -223,11 +223,21 @@ export default function SettingsPage() {
         <Section
           title="Gmail (sending + reply/bounce tracking)"
           status={!!v.gmail_user && (pub.secrets.gmail_refresh_token?.set || pub.secrets.gmail_app_password?.set)}
-          description={<>Click <b>Connect with Google</b>, sign in with the Gmail account you want to send from and allow access — no password is stored, and you can revoke it any time from your Google account.</>}
+          description={<>Connect the Gmail account you send from with a <b>Gmail App Password</b> (myaccount.google.com/apppasswords) — your real Gmail password is never needed, and you can revoke it any time from your Google account.</>}
           test="Gmail" onTest={() => test("gmail")} testing={testing === "gmail"}
         >
           <div className="sm:col-span-2 rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            {gmail?.connected ? (
+            {!gmail?.connected && !!v.gmail_user && pub.secrets.gmail_app_password?.set ? (
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="flex items-center gap-2 text-sm font-medium"><Badge tone="green">connected</Badge> {v.gmail_user} <span className="text-xs text-white/40">(App Password)</span></p>
+                  <p className="mt-1 text-xs text-white/50">Emails are sent from this account; replies, bounces and labels are read from its inbox. Click Test to check the connection.</p>
+                </div>
+                {gmail?.clientConfigured && (
+                  <Button variant="secondary" onClick={connectGoogle} loading={connecting}><LogIn className="h-4 w-4" /> Switch to Google sign-in</Button>
+                )}
+              </div>
+            ) : gmail?.connected ? (
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="flex items-center gap-2 text-sm font-medium"><Badge tone="green">connected</Badge> {gmail.email}</p>
@@ -246,19 +256,23 @@ export default function SettingsPage() {
                     {gmail?.clientConfigured || (secrets.google_client_secret && v.google_client_id)
                       ? "Opens Google's permission screen in this browser. Required before you can send any email."
                       : admin
-                        ? "First paste your Google OAuth Client ID + Secret below (one-time setup)."
-                        : "Google sign-in is not set up yet — ask the admin."}
+                        ? "Add your Gmail address + App Password below (easiest), or set up Google sign-in under \"Google OAuth client\"."
+                        : "Add your Gmail address + App Password below."}
                   </p>
                 </div>
-                <Button onClick={connectGoogle} loading={connecting}>
-                  <LogIn className="h-4 w-4" /> Connect with Google
-                </Button>
+                {(gmail?.clientConfigured || (secrets.google_client_secret && v.google_client_id)) ? (
+                  <Button onClick={connectGoogle} loading={connecting}>
+                    <LogIn className="h-4 w-4" /> Connect with Google
+                  </Button>
+                ) : (
+                  <Button onClick={() => setShowAppPassword(true)}>Add Gmail App Password</Button>
+                )}
               </div>
             )}
           </div>
 
           {admin && (
-          <details id="google-oauth-setup" className="sm:col-span-2 rounded-xl border border-white/10 p-4" open={!gmail?.clientConfigured}>
+          <details id="google-oauth-setup" className="sm:col-span-2 rounded-xl border border-white/10 p-4">
             <summary className="cursor-pointer text-sm font-medium">Google OAuth client (one-time setup)</summary>
             <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-white/50">
               <li>Go to <a className="underline" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noreferrer">console.cloud.google.com/apis/credentials</a> → Create credentials → OAuth client ID → type <b>Web application</b>.</li>
