@@ -14,9 +14,9 @@ const SAMPLE_VARS: Record<string, string> = {
   location: "Mumbai, India",
   email: "rahul@mediacube.io",
   linkedin_url: "https://www.linkedin.com/in/rahul-sharma",
-  sender_name: "Vijendra",
-  signature: "Vijendra\nKVSPT",
-  unsubscribe_url: "https://kvspt.com/api/intubtool/u/sample",
+  sender_name: "Ajeet",
+  signature: "Ajeet Bainsla\nBainsla Music",
+  unsubscribe_url: "https://mail.bainslamusic.com/api/intubtool/u/sample",
 };
 
 /** Renders {{vars}} with sample values the way the server will, so the live score matches the real mail. */

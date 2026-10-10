@@ -40,7 +40,7 @@ export async function POST(req: Request, { params }: Ctx) {
         subject: `[TEST] ${mail.subject}`,
         html: mail.html,
         text: mail.text,
-        messageId: newMessageId((s.gmail_user.split("@")[1] || "kvspt.com").toLowerCase()),
+        messageId: newMessageId((s.gmail_user.split("@")[1] || "bainslamusic.com").toLowerCase()),
         fromName: c.fromName || s.from_name,
         replyTo: c.replyTo || s.reply_to,
         listUnsubscribe: mail.listUnsubscribe ?? undefined,

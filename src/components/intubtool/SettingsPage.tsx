@@ -293,11 +293,11 @@ export default function SettingsPage() {
             )}
           </div>
 
-          <Field label="From name"><Input {...val("from_name")} placeholder="Vijendra from KVSPT" /></Field>
+          <Field label="From name"><Input {...val("from_name")} placeholder="Ajeet from Bainsla Music" /></Field>
           <Field label="Reply-to (optional)"><Input type="email" {...val("reply_to")} /></Field>
           <Field label={admin ? "Global daily send limit" : "My daily send limit"} hint="Across all your campaigns. Gmail free ≈ 500/day, Workspace ≈ 2000/day; start low (30–50) for a new account."><Input type="number" {...val("default_daily_limit")} /></Field>
           {admin && <Field label="Inbox check interval (min)" hint="How often to scan Gmail for replies & bounces."><Input type="number" {...val("imap_poll_minutes")} /></Field>}
-          {admin && <Field label="Public base URL" hint="Used for open-tracking pixel & unsubscribe links."><Input {...val("public_base_url")} placeholder="https://kvspt.com" /></Field>}
+          {admin && <Field label="Public base URL" hint="Used for open-tracking pixel & unsubscribe links."><Input {...val("public_base_url")} placeholder="https://mail.bainslamusic.com" /></Field>}
           <Field label="Signature" className="sm:col-span-2" hint="Available as {{signature}} in templates."><Textarea rows={3} {...val("signature")} /></Field>
           <Field label="Unsubscribe line" className="sm:col-span-2" hint="Appended automatically if the template has no unsubscribe/opt-out text. Keep {{unsubscribe_url}}."><Textarea rows={2} {...val("unsubscribe_text")} /></Field>
           {result("gmail")}

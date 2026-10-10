@@ -110,7 +110,7 @@ async function sendToLead(campaign: Campaign & { steps: CampaignStep[] }, cl: { 
       ? await prisma.emailMessage.findFirst({ where: { campaignId: campaign.id, leadId: lead.id, stepOrder: 0, status: { not: "failed" } }, orderBy: { sentAt: "asc" } })
       : null;
 
-  const messageId = newMessageId((s.gmail_user.split("@")[1] || "kvspt.com").toLowerCase());
+  const messageId = newMessageId((s.gmail_user.split("@")[1] || "bainslamusic.com").toLowerCase());
   const record = await prisma.emailMessage.create({
     data: { campaignId: campaign.id, leadId: lead.id, stepOrder: step.order, messageId, toEmail: lead.email, subject: "", bodyHtml: "", bodyText: "", status: "sent" },
   });

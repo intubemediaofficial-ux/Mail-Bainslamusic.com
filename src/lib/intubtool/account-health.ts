@@ -110,7 +110,7 @@ async function deliver(a: Alert) {
       const s = await getSettings(o.owner);
       if (!gmailConfigured(s)) continue;
       try {
-        await sendMail({ to, subject: a.subject, text: a.text, messageId: newMessageId("kvspt.com"), fromName: "IntubTool alerts" }, s);
+        await sendMail({ to, subject: a.subject, text: a.text, messageId: newMessageId("bainslamusic.com"), fromName: "IntubTool alerts" }, s);
         email = true;
         break;
       } catch (e) {

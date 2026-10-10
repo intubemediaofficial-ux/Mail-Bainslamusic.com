@@ -23,7 +23,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   try {
     const mail = await renderBlastMail(r.blast, account, { ...lead }, s, b?.kind === "followup" ? "followup" : "initial", variantFor(r.blast, account));
     if (!mail.subject || !mail.text) return fail("Template is empty");
-    await sendMail({ to, subject: `[TEST #${account.order}] ${mail.subject}`, html: mail.html, text: mail.text, messageId: newMessageId("kvspt.com"), fromName: s.from_name || account.label, replyTo: s.reply_to }, s);
+    await sendMail({ to, subject: `[TEST #${account.order}] ${mail.subject}`, html: mail.html, text: mail.text, messageId: newMessageId("bainslamusic.com"), fromName: s.from_name || account.label, replyTo: s.reply_to }, s);
     return ok({ message: `Test sent to ${to} from #${account.order} ${account.email}` });
   } catch (e) {
     return fail((e as Error).message);

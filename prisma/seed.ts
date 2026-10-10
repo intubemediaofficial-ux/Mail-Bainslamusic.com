@@ -5,7 +5,7 @@ import { defaultSettings, defaultOffices, defaultServices, defaultBlocks } from 
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = (process.env.ADMIN_EMAIL ?? "admin@kvspt.com").toLowerCase();
+  const email = (process.env.ADMIN_EMAIL ?? "intubemediaofficial@gmail.com").toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
   if (!password) throw new Error("ADMIN_PASSWORD env var is required to seed the admin user");
 
@@ -13,7 +13,7 @@ async function main() {
   await prisma.user.upsert({
     where: { email },
     update: { role: "admin", status: "approved", shareData: true },
-    create: { email, password: hash, name: "KVSPT Admin", role: "admin", status: "approved", shareData: true, approvedAt: new Date() },
+    create: { email, password: hash, name: "Bainsla Music Admin", role: "admin", status: "approved", shareData: true, approvedAt: new Date() },
   });
   console.log(`Admin user ready: ${email}`);
 
@@ -40,17 +40,17 @@ async function main() {
   if ((await prisma.blogPost.count()) === 0) {
     await prisma.blogPost.create({
       data: {
-        title: "Welcome to the KVSPT blog",
-        slug: "welcome-to-kvspt",
+        title: "Welcome to the Bainsla Music blog",
+        slug: "welcome-to-bainsla-music",
         excerpt:
-          "News, guides and insights on music distribution, YouTube growth, digital rights and technology from the KVSPT team.",
+          "News, guides and insights on music distribution, YouTube growth, digital rights and technology from the Bainsla Music team.",
         category: "Company",
-        tags: "kvspt, announcement",
-        author: "KVSPT Team",
+        tags: "bainsla music, announcement",
+        author: "Bainsla Music Team",
         published: true,
         publishedAt: new Date(),
-        content: `<h2>Hello from London &amp; Jaipur</h2>
-<p>KVSPT is a music, media and technology company. On this blog we will share practical guides on <strong>music distribution</strong>, <strong>YouTube CMS &amp; Content ID</strong>, digital marketing, SEO, artist management and the technology we build — including our own micro drama app.</p>
+        content: `<h2>Hello from Jaipur</h2>
+<p>Bainsla Music is a music, media and technology company. On this blog we will share practical guides on <strong>music distribution</strong>, <strong>YouTube CMS &amp; Content ID</strong>, digital marketing, SEO, artist management and the technology we build — including our own micro drama app.</p>
 <h3>What to expect</h3>
 <ul>
 <li>Release strategy and playlist pitching tips</li>

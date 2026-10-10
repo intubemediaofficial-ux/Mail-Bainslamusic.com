@@ -30,7 +30,7 @@ export default function LoginForm({ callbackUrl, initialError }: { callbackUrl: 
   return (
     <form onSubmit={onSubmit} className="mt-8 space-y-5">
       <Field label="Email">
-        <Input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@kvspt.com" />
+        <Input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@bainslamusic.com" />
       </Field>
       <Field label="Password">
         <Input type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />

@@ -1,7 +1,8 @@
 import Link from "next/link";
 
-export default function Logo({ className = "", companyName = "KVSPT" }: { className?: string; companyName?: string }) {
-  const head = companyName.slice(0, Math.max(1, companyName.length - 2));
+export default function Logo({ className = "", companyName = "Bainsla Music" }: { className?: string; companyName?: string }) {
+  const sp = companyName.lastIndexOf(" ");
+  const head = sp > 0 ? companyName.slice(0, sp + 1) : companyName.slice(0, Math.max(1, companyName.length - 2));
   const tail = companyName.slice(head.length);
   return (
     <Link href="/" className={`flex items-center gap-2.5 ${className}`} aria-label={`${companyName} home`}>

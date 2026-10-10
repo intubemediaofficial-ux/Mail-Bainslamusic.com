@@ -272,7 +272,7 @@ async function sendOne(b: Blast, a: BlastAccount, lead: BlastLead, kind: "initia
   const now = new Date();
   const s = await getSettings(a.ownerId);
   const variant = kind === "initial" ? variantFor(b, a) : 0;
-  const messageId = newMessageId((a.email.split("@")[1] || "kvspt.com").toLowerCase());
+  const messageId = newMessageId((a.email.split("@")[1] || "bainslamusic.com").toLowerCase());
   const rec = await prisma.blastMessage.create({
     data: { blastId: b.id, leadId: lead.id, accountId: a.id, ownerKey: a.ownerKey, fromEmail: a.email, kind, variant, messageId, toEmail: lead.email, subject: "", bodyText: "", status: "sent" },
   });
@@ -359,7 +359,7 @@ async function dailySummary(b: Blast, now: Date) {
   const sender = accounts.find((a) => a.enabled && (!a.blockedUntil || a.blockedUntil <= now)) || accounts[0];
   const s = await getSettings(sender?.ownerId ?? null);
   if (!gmailConfigured(s)) return;
-  await sendMail({ to: b.summaryEmail, subject: `[IntubTool] ${b.name}: ${sent.length} sent, ${replies} replies, ${bounces} bounces today`, text: lines.join("\n"), messageId: newMessageId("kvspt.com") }, s).catch(() => undefined);
+  await sendMail({ to: b.summaryEmail, subject: `[IntubTool] ${b.name}: ${sent.length} sent, ${replies} replies, ${bounces} bounces today`, text: lines.join("\n"), messageId: newMessageId("bainslamusic.com") }, s).catch(() => undefined);
 }
 
 /** One scheduler tick: every enabled, unblocked account whose gap elapsed sends one mail (follow-ups due first, then its queued range). */
