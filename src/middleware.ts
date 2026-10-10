@@ -7,6 +7,7 @@ const PUBLIC_PAGES = ["/intubtool/login", "/intubtool/signup"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  if (pathname === "/") return NextResponse.redirect(new URL("/intubtool", req.url));
   if (PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))) return NextResponse.next();
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -47,5 +48,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/intubtool/:path*", "/api/intubtool/:path*"],
+  matcher: ["/", "/admin/:path*", "/api/admin/:path*", "/intubtool/:path*", "/api/intubtool/:path*"],
 };

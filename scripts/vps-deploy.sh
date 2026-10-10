@@ -12,6 +12,7 @@ mkdir -p "$NEW/prisma" "$NEW/uploads"
 if [ -f "$APP/.env" ]; then
   cp "$APP/.env" "$NEW/.env"
   [ -f "$APP/prisma/prod.db" ] && cp "$APP/prisma/prod.db" "$NEW/prisma/prod.db" && cp "$APP/prisma/prod.db" "$BK/prod-$(date +%Y%m%d-%H%M%S).db"
+  [ -f "$APP/prisma/.seeded" ] && cp "$APP/prisma/.seeded" "$NEW/prisma/.seeded"
   cp -a "$APP/uploads/." "$NEW/uploads/" 2>/dev/null || true
   cp -a "$APP/node_modules" "$NEW/node_modules" 2>/dev/null || true
 else
