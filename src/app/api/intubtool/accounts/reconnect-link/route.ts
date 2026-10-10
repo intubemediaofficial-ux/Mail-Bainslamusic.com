@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   const gmailEmail = s.gmail_oauth_email || s.gmail_user || "your Gmail";
   const sender = await pickSender(owner);
   if (!sender) return fail("No working Gmail account available to send the link from — connect one first (Settings → Gmail or App Password).");
-  const link = `${baseUrl(g)}/intubtool/login?callbackUrl=${encodeURIComponent("/intubtool/settings?connect=1")}`;
+  const link = `${baseUrl(g)}/login?callbackUrl=${encodeURIComponent("/settings?connect=1")}`;
   const name = user?.name || user?.email || "there";
   await sendMail(
     {

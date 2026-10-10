@@ -41,7 +41,7 @@ export default function CampaignsPage() {
           ],
         }),
       });
-      router.push(`/intubtool/campaigns/${c.id}`);
+      router.push(`/campaigns/${c.id}`);
     } catch (e) {
       error((e as Error).message);
     } finally {
@@ -99,7 +99,7 @@ export default function CampaignsPage() {
           <Card key={c.id} className="p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <Link href={`/intubtool/campaigns/${c.id}`} className="flex items-center gap-2 text-lg font-semibold hover:text-cyan-300">
+                <Link href={`/campaigns/${c.id}`} className="flex items-center gap-2 text-lg font-semibold hover:text-cyan-300">
                   <Mail className="h-4 w-4 text-white/40" /> {c.name} <Badge tone={statusTone(c.status)}>{c.status}</Badge>
                 </Link>
                 <p className="mt-1 text-xs text-white/50">
@@ -112,7 +112,7 @@ export default function CampaignsPage() {
                 ) : c.status !== "completed" ? (
                   <Button onClick={() => act(c.id, c.status === "paused" ? "resume" : "start")} loading={busy === c.id}><Play className="h-4 w-4" /> {c.status === "paused" ? "Resume" : "Start"}</Button>
                 ) : null}
-                <Link href={`/intubtool/campaigns/${c.id}`}><Button variant="ghost">Open</Button></Link>
+                <Link href={`/campaigns/${c.id}`}><Button variant="ghost">Open</Button></Link>
               </div>
             </div>
             <div className="mt-4 grid grid-cols-3 gap-3 text-center sm:grid-cols-6">

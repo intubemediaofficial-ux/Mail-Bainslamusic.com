@@ -41,7 +41,7 @@ export default function SignupForm() {
             </p>
           </div>
         </div>
-        <Link href="/intubtool/login" className="inline-block text-sm font-medium text-cyan-300 hover:text-cyan-200">
+        <Link href="/login" className="inline-block text-sm font-medium text-cyan-300 hover:text-cyan-200">
           Back to sign in
         </Link>
       </div>
@@ -68,7 +68,7 @@ export default function SignupForm() {
       </Button>
       <p className="text-center text-sm text-white/55">
         Already have an account?{" "}
-        <Link href="/intubtool/login" className="font-medium text-cyan-300 hover:text-cyan-200">
+        <Link href="/login" className="font-medium text-cyan-300 hover:text-cyan-200">
           Sign in
         </Link>
       </p>

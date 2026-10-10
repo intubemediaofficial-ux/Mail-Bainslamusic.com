@@ -80,7 +80,7 @@ export default function InboxPage() {
           <Inbox className="mx-auto mb-3 h-10 w-10 text-white/40" />
           <p className="text-white">Gmail is not connected yet.</p>
           <p className="mt-1 text-sm text-white/50">{err}</p>
-          <Link href="/intubtool/settings" className="mt-5 inline-block"><Button><Settings className="h-4 w-4" /> Connect Gmail in Settings</Button></Link>
+          <Link href="/settings" className="mt-5 inline-block"><Button><Settings className="h-4 w-4" /> Connect Gmail in Settings</Button></Link>
         </Card>
       </div>
     );

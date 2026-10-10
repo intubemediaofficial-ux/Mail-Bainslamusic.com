@@ -113,7 +113,7 @@ export default function UsersPage() {
         {users === null ? (
           <p className="text-sm text-white/50">Loading…</p>
         ) : pending.length === 0 ? (
-          <Empty title="No pending sign-ups">New registrations from /intubtool/signup will appear here.</Empty>
+          <Empty title="No pending sign-ups">New registrations from /signup will appear here.</Empty>
         ) : (
           <div className="space-y-2">{pending.map((u) => <Row key={u.id} u={u} />)}</div>
         )}

@@ -108,7 +108,7 @@ export default function SearchPage() {
       const j = await api<Job>("/api/intubtool/jobs", { method: "POST", body: JSON.stringify(body) });
       success("Search started");
       loadJobs();
-      router.push(`/intubtool/search?job=${j.id}`);
+      router.push(`/search?job=${j.id}`);
     } catch (e) {
       error((e as Error).message);
     } finally {
@@ -121,7 +121,7 @@ export default function SearchPage() {
       if (action === "delete") {
         await api(`/api/intubtool/jobs/${id}`, { method: "DELETE" });
         loadJobs();
-        if (id === jobId) router.push("/intubtool/search");
+        if (id === jobId) router.push("/search");
         return;
       }
       await api(`/api/intubtool/jobs/${id}`, { method: "PATCH", body: JSON.stringify({ action }) });
@@ -290,11 +290,11 @@ export default function SearchPage() {
                   </Button>
                   <p className="text-xs text-white/40">
                     {mode === "title" ? (
-                      <>Needs your SalesQL API key in <Link href="/intubtool/settings" className="text-cyan-300 hover:underline">Settings</Link>. Runs in background; you can leave this page.</>
+                      <>Needs your SalesQL API key in <Link href="/settings" className="text-cyan-300 hover:underline">Settings</Link>. Runs in background; you can leave this page.</>
                     ) : source === "salesql" ? (
-                      <>Needs your SalesQL API key + web token in <Link href="/intubtool/settings" className="text-cyan-300 hover:underline">Settings</Link>. Runs in background; you can leave this page.</>
+                      <>Needs your SalesQL API key + web token in <Link href="/settings" className="text-cyan-300 hover:underline">Settings</Link>. Runs in background; you can leave this page.</>
                     ) : (
-                      <>Needs your LinkedIn <code>li_at</code> cookie in <Link href="/intubtool/settings" className="text-cyan-300 hover:underline">Settings</Link>. Runs in background with human-like delays; you can leave this page.</>
+                      <>Needs your LinkedIn <code>li_at</code> cookie in <Link href="/settings" className="text-cyan-300 hover:underline">Settings</Link>. Runs in background with human-like delays; you can leave this page.</>
                     )}
                   </p>
                 </div>
@@ -316,13 +316,13 @@ export default function SearchPage() {
                       {job.mode === "title" && job.filters ? ` · filters: ${filterSummary(job.filters)}` : ""} · started {timeAgo(job.startedAt || job.createdAt)}
                     </p>
                     {job.listId && (
-                      <Link href={`/intubtool/leads?list=${job.listId}`} className="mt-1 inline-flex items-center gap-1 text-xs text-violet-300 hover:underline">
+                      <Link href={`/leads?list=${job.listId}`} className="mt-1 inline-flex items-center gap-1 text-xs text-violet-300 hover:underline">
                         <Folder className="h-3 w-3" /> Saved into list: {lists.find((l) => l.id === job.listId)?.name ?? "open list"}
                       </Link>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Link href="/intubtool/search"><Button variant="ghost">New search</Button></Link>
+                    <Link href="/search"><Button variant="ghost">New search</Button></Link>
                     {["queued", "running"].includes(job.status) && <Button variant="danger" onClick={() => act(job.id, "cancel")}><Square className="h-4 w-4" /> Stop</Button>}
                     {["failed", "cancelled", "done"].includes(job.status) && <Button variant="secondary" onClick={() => act(job.id, "retry")}><RotateCcw className="h-4 w-4" /> Re-run</Button>}
                     {leads.length > 0 && (
@@ -365,7 +365,7 @@ export default function SearchPage() {
                         <span>{list.length} people</span>
                         <span className="inline-flex items-center gap-1"><Mail className="h-3 w-3" /> {list.filter((l) => l.email).length}</span>
                         <span className="inline-flex items-center gap-1"><Phone className="h-3 w-3" /> {list.filter((l) => l.phone).length}</span>
-                        <Link href={`/intubtool/leads?company=${encodeURIComponent(company)}`} className="text-cyan-300 hover:underline">Open</Link>
+                        <Link href={`/leads?company=${encodeURIComponent(company)}`} className="text-cyan-300 hover:underline">Open</Link>
                       </div>
                     </div>
                     <table className="w-full text-sm">
@@ -417,7 +417,7 @@ export default function SearchPage() {
               <ul className="space-y-1">
                 {jobs.map((j) => (
                   <li key={j.id} className={`group flex items-center gap-2 rounded-lg px-2 py-2 text-sm ${j.id === jobId ? "bg-white/10" : "hover:bg-white/5"}`}>
-                    <Link href={`/intubtool/search?job=${j.id}`} className="min-w-0 flex-1">
+                    <Link href={`/search?job=${j.id}`} className="min-w-0 flex-1">
                       <p className="truncate font-medium">{j.name}</p>
                       <p className="text-[11px] text-white/40">{j._count?.leads ?? j.found} leads · {timeAgo(j.createdAt)}</p>
                     </Link>

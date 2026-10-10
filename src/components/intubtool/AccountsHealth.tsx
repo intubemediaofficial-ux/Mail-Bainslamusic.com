@@ -113,7 +113,7 @@ export default function AccountsHealth() {
         description="Every sender Gmail (admin + members) in one place: connection, daily sign-in check, today's volume, bounce rate, blocks and what went wrong last. Alerts below tell you the moment an account disconnects or gets blocked."
         actions={
           <div className="flex flex-wrap gap-2">
-            <Link href="/intubtool/multi-send"><Button variant="ghost"><ArrowLeft className="h-4 w-4" /> Multi-account Send</Button></Link>
+            <Link href="/multi-send"><Button variant="ghost"><ArrowLeft className="h-4 w-4" /> Multi-account Send</Button></Link>
             <Button variant="secondary" onClick={load}><RefreshCw className="h-4 w-4" /> Refresh</Button>
             <Button onClick={checkAll} loading={busy === "check-all"}><Activity className="h-4 w-4" /> Check all now</Button>
           </div>

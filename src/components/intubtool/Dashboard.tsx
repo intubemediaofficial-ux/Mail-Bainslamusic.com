@@ -39,8 +39,8 @@ export default function Dashboard() {
         description="Company → matching employees (LinkedIn) → your database → SalesQL only when missing → Gmail outreach with tracking."
         actions={
           <>
-            <Link href="/intubtool/search"><Button><Search className="h-4 w-4" /> New search</Button></Link>
-            <Link href="/intubtool/leads?import=1"><Button variant="secondary"><Upload className="h-4 w-4" /> Import CSV / Excel</Button></Link>
+            <Link href="/search"><Button><Search className="h-4 w-4" /> New search</Button></Link>
+            <Link href="/leads?import=1"><Button variant="secondary"><Upload className="h-4 w-4" /> Import CSV / Excel</Button></Link>
           </>
         }
       />
@@ -60,7 +60,7 @@ export default function Dashboard() {
                     {{ linkedin: "LinkedIn cookie", salesql: "SalesQL key", gmail: s.admin ? "Gmail" : "Connect your Gmail to send campaigns", ai: "AI (optional)" }[k]}
                   </span>
                 ))}
-                <Link href="/intubtool/settings" className="ml-auto"><Button variant="ghost"><Settings className="h-4 w-4" /> Open settings</Button></Link>
+                <Link href="/settings" className="ml-auto"><Button variant="ghost"><Settings className="h-4 w-4" /> Open settings</Button></Link>
               </div>
             </Card>
           )}
@@ -103,7 +103,7 @@ export default function Dashboard() {
             <Card className="p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-semibold">Recent searches</h2>
-                <Link href="/intubtool/search" className="text-xs text-cyan-300 hover:underline">View all</Link>
+                <Link href="/search" className="text-xs text-cyan-300 hover:underline">View all</Link>
               </div>
               {s.recentJobs.length === 0 ? (
                 <p className="text-sm text-white/50">No searches yet. Add companies + designations to start.</p>
@@ -111,7 +111,7 @@ export default function Dashboard() {
                 <ul className="divide-y divide-white/5">
                   {s.recentJobs.map((j) => (
                     <li key={j.id} className="flex items-center gap-3 py-3 text-sm">
-                      <Link href={`/intubtool/search?job=${j.id}`} className="min-w-0 flex-1 truncate font-medium hover:text-cyan-300">{j.name}</Link>
+                      <Link href={`/search?job=${j.id}`} className="min-w-0 flex-1 truncate font-medium hover:text-cyan-300">{j.name}</Link>
                       <span className="text-xs text-white/50">{j._count.leads} leads</span>
                       <Badge tone={statusTone(j.status)}>{j.status}{j.status === "running" && ` ${j.progress}/${j.total}`}</Badge>
                       <span className="w-14 text-right text-xs text-white/40">{timeAgo(j.createdAt)}</span>
@@ -123,7 +123,7 @@ export default function Dashboard() {
             <Card className="p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-semibold">Recently added leads</h2>
-                <Link href="/intubtool/leads" className="text-xs text-cyan-300 hover:underline">Open database</Link>
+                <Link href="/leads" className="text-xs text-cyan-300 hover:underline">Open database</Link>
               </div>
               {s.recentLeads.length === 0 ? (
                 <p className="text-sm text-white/50">Database is empty — import your SalesQL export or run a search.</p>

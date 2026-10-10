@@ -52,7 +52,7 @@ export default function LoginForm({ callbackUrl, initialStatus, registered }: { 
             <p className="font-semibold">{st.title}</p>
             <p className="mt-0.5 text-xs opacity-80">{st.text}</p>
             {initialStatus && (
-              <button type="button" onClick={() => signOut({ callbackUrl: "/intubtool/login" })} className="mt-2 text-xs underline opacity-80 hover:opacity-100">
+              <button type="button" onClick={() => signOut({ callbackUrl: "/login" })} className="mt-2 text-xs underline opacity-80 hover:opacity-100">
                 Sign out
               </button>
             )}
@@ -71,7 +71,7 @@ export default function LoginForm({ callbackUrl, initialStatus, registered }: { 
       </Button>
       <p className="text-center text-sm text-white/55">
         New here?{" "}
-        <Link href="/intubtool/signup" className="font-medium text-cyan-300 hover:text-cyan-200">
+        <Link href="/signup" className="font-medium text-cyan-300 hover:text-cyan-200">
           Create an account
         </Link>
       </p>

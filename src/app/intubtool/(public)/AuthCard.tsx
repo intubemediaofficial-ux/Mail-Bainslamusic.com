@@ -8,7 +8,7 @@ export default function AuthCard({ title, subtitle, children }: { title: string;
       <div className="bg-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#0d0d17]/90 p-8 shadow-2xl backdrop-blur">
         <div className="flex flex-col items-center text-center">
-          <Link href="/intubtool/login" className="flex items-center gap-2">
+          <Link href="/login" className="flex items-center gap-2">
             <span className="h-9 w-9 rounded-lg bg-gradient-to-br from-cyan-400 via-sky-500 to-violet-600" />
             <span className="text-xl font-extrabold tracking-tight">
               Bainsla <span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">Mail Tool</span>

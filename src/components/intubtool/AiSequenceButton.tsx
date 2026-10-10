@@ -22,7 +22,7 @@ export default function AiSequenceButton({ onError }: { onError: (m: string) => 
     setBusy(true);
     try {
       const r = await api<{ id: string }>("/api/intubtool/campaigns/ai-build", { method: "POST", body: JSON.stringify({ ...f, steps: Number(f.steps) }) });
-      router.push(`/intubtool/campaigns/${r.id}`);
+      router.push(`/campaigns/${r.id}`);
     } catch (e) {
       onError((e as Error).message);
       setBusy(false);

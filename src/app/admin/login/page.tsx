@@ -17,7 +17,7 @@ export default async function LoginPage({ searchParams }: { searchParams: { call
           <h1 className="mt-6 text-xl font-bold text-white">Admin panel</h1>
           <p className="mt-1 text-sm text-white/55">Sign in to manage your website content.</p>
         </div>
-        <LoginForm callbackUrl={/^\/(admin|intubtool)(\/|$)/.test(searchParams.callbackUrl || "") ? searchParams.callbackUrl! : "/admin"} initialError={!!searchParams.error} />
+        <LoginForm callbackUrl={/^\/(?![\/\\])/.test(searchParams.callbackUrl || "") ? searchParams.callbackUrl! : "/admin"} initialError={!!searchParams.error} />
       </div>
     </div>
   );

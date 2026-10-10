@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Sign in · Bainsla Mail Tool", robot
 export const dynamic = "force-dynamic";
 
 export default function ToolLoginPage({ searchParams }: { searchParams: { callbackUrl?: string; status?: string; registered?: string } }) {
-  const cb = /^\/(admin|intubtool)(\/|$)/.test(searchParams.callbackUrl || "") ? searchParams.callbackUrl! : "/intubtool";
+  const cb = /^\/(?![\/\\])/.test(searchParams.callbackUrl || "") ? searchParams.callbackUrl! : "/";
   return (
     <AuthCard title="Sign in" subtitle="Lead research & Gmail outreach">
       <LoginForm callbackUrl={cb} initialStatus={searchParams.status} registered={searchParams.registered === "1"} />
