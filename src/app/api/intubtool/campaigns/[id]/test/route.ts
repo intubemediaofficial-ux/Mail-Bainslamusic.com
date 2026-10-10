@@ -42,6 +42,7 @@ export async function POST(req: Request, { params }: Ctx) {
         text: mail.text,
         messageId: newMessageId((s.gmail_user.split("@")[1] || "bainslamusic.com").toLowerCase()),
         fromName: c.fromName || s.from_name,
+        fromEmail: c.fromEmail,
         replyTo: c.replyTo || s.reply_to,
         listUnsubscribe: mail.listUnsubscribe ?? undefined,
         attachments: await mailAttachments(step.attachments),

@@ -1,3 +1,4 @@
+import { queueDueSavedSearches } from "./saved-search";
 import { prisma } from "@/lib/db";
 import { runSearchJob } from "./search-runner";
 import { campaignTick } from "./campaign-runner";
@@ -95,6 +96,7 @@ async function accountHealthStep(st: State) {
 
 async function tick(st: State) {
   st.ticks++;
+  await queueDueSavedSearches().catch(() => 0);
   await Promise.all([searchStep(st), enrichStep(st), mailStep(st), imapStep(st), salesqlStep(st), accountHealthStep(st)]);
 }
 

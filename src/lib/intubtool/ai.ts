@@ -62,3 +62,17 @@ export async function aiSpamReview(subject: string, body: string) {
   const out = await chat([{ role: "system", content: sys }, { role: "user", content: `SUBJECT: ${subject}\n\nBODY:\n${body}` }], { json: true, temperature: 0.3 });
   return JSON.parse(out) as { score: number; issues: string[]; improved_subject: string; improved_body: string };
 }
+
+export type SequenceStep = { subject: string; body: string; delayDays: number };
+
+export async function generateSequence(input: { goal: string; audience: string; offer: string; steps: number; tone: string; language: string; company: string }) {
+  const sys = `You write high-converting, non-spammy cold email sequences for ${input.company}. Return JSON {"name": string, "steps": [{"subject": string, "body": string, "delayDays": number}]}.
+Rules: exactly ${input.steps} steps. Step 1 delayDays=0, later steps 2-5 days. Follow-ups use subject "" (they thread as replies). Plain text, 50-120 words each, one clear ask, no spam words, no links except {{booking_link}}.
+Use these merge tags where natural: {{first_name}}, {{company}}, {{title}}, and end every email with {{signature}}. Include {{booking_link}} in at least one step as the call-to-action. Language: ${input.language}. Tone: ${input.tone}.`;
+  const user = `Goal: ${input.goal}\nAudience: ${input.audience}\nWhat we offer: ${input.offer}`;
+  const out = await chat([{ role: "system", content: sys }, { role: "user", content: user }], { json: true, temperature: 0.7 });
+  const j = JSON.parse(out) as { name?: string; steps?: SequenceStep[] };
+  const steps = (j.steps || []).filter((s) => s && s.body).slice(0, 8);
+  if (!steps.length) throw new AiError("AI returned an empty sequence, try again");
+  return { name: j.name || "AI sequence", steps };
+}

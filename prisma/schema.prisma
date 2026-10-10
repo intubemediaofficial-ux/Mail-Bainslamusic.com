@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  email      String    @unique
+  id         String        @id @default(cuid())
+  email      String        @unique
   password   String
   name       String?
-  role       String    @default("member") // admin | member
-  status     String    @default("pending") // pending | approved | rejected | disabled
-  shareData  Boolean   @default(false) // member may also see the shared (admin) leads / lists
+  role       String        @default("member") // admin | member
+  status     String        @default("pending") // pending | approved | rejected | disabled
+  shareData  Boolean       @default(false) // member may also see the shared (admin) leads / lists
   approvedAt DateTime?
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime      @default(now())
   settings   UserSetting[]
   leads      Lead[]
   lists      ContactList[]
@@ -137,42 +137,42 @@ model SearchJob {
 }
 
 model Lead {
-  id            String    @id @default(cuid())
-  jobId         String?
-  job           SearchJob? @relation(fields: [jobId], references: [id], onDelete: SetNull)
-  ownerId       String? // null = shared (admin) data
-  owner         User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-  company       String
-  companyDomain String?
-  companyUrl    String?
-  fullName      String
-  firstName     String?
-  lastName      String?
-  title         String?
-  headline      String?
-  location      String?
-  linkedinUrl   String?
-  category      String?
-  source        String    @default("manual") // linkedin | salesql | salesql_sync | web | import | manual
-  salesqlUid    String?
+  id              String            @id @default(cuid())
+  jobId           String?
+  job             SearchJob?        @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  ownerId         String? // null = shared (admin) data
+  owner           User?             @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  company         String
+  companyDomain   String?
+  companyUrl      String?
+  fullName        String
+  firstName       String?
+  lastName        String?
+  title           String?
+  headline        String?
+  location        String?
+  linkedinUrl     String?
+  category        String?
+  source          String            @default("manual") // linkedin | salesql | salesql_sync | web | import | manual
+  salesqlUid      String?
   salesqlSyncedAt DateTime?
-  email         String?
-  emailStatus   String?
-  emails        String? // JSON
-  phone         String?
-  phones        String? // JSON
-  enrichStatus  String    @default("none") // none | queued | done | not_found | error
-  enrichError   String?
-  enrichedAt    DateTime?
-  enrichRaw     String?
-  notes         String?
-  unsubscribed  Boolean   @default(false)
-  unsubToken    String    @unique @default(cuid())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  campaignLeads CampaignLead[]
-  messages      EmailMessage[]
-  lists         ContactListLead[]
+  email           String?
+  emailStatus     String?
+  emails          String? // JSON
+  phone           String?
+  phones          String? // JSON
+  enrichStatus    String            @default("none") // none | queued | done | not_found | error
+  enrichError     String?
+  enrichedAt      DateTime?
+  enrichRaw       String?
+  notes           String?
+  unsubscribed    Boolean           @default(false)
+  unsubToken      String            @unique @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  campaignLeads   CampaignLead[]
+  messages        EmailMessage[]
+  lists           ContactListLead[]
 
   @@index([company])
   @@index([linkedinUrl])
@@ -205,39 +205,40 @@ model ContactListLead {
 }
 
 model Campaign {
-  id              String    @id @default(cuid())
+  id              String         @id @default(cuid())
   name            String
   ownerId         String? // null = admin's campaign (sends with the global Gmail connection)
-  owner           User?     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  status          String    @default("draft") // draft | running | paused | completed
+  owner           User?          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status          String         @default("draft") // draft | running | paused | completed
   fromName        String?
+  fromEmail       String? // Gmail "Send mail as" alias; null = connected Gmail address
   replyTo         String?
   cc              String?
   bcc             String?
-  dailyLimit      Int       @default(40)
-  sendWindowStart Int       @default(9) // hour of day (server local time)
-  sendWindowEnd   Int       @default(18)
-  minGapSeconds   Int       @default(90)
-  trackOpens      Boolean   @default(true)
-  personalMode    Boolean   @default(false) // text-only, no pixel / unsubscribe header / footer — reads like a 1:1 mail
-  aiPersonalize   Boolean   @default(false)
+  dailyLimit      Int            @default(40)
+  sendWindowStart Int            @default(9) // hour of day (server local time)
+  sendWindowEnd   Int            @default(18)
+  minGapSeconds   Int            @default(90)
+  trackOpens      Boolean        @default(true)
+  personalMode    Boolean        @default(false) // text-only, no pixel / unsubscribe header / footer — reads like a 1:1 mail
+  aiPersonalize   Boolean        @default(false)
   aiInstructions  String?
-  stopOnReply     Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  stopOnReply     Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   steps           CampaignStep[]
   leads           CampaignLead[]
   messages        EmailMessage[]
 }
 
 model CampaignStep {
-  id         String   @id @default(cuid())
-  campaignId String
-  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  order      Int
-  delayDays  Int      @default(0)
-  subject    String
-  body       String
+  id          String   @id @default(cuid())
+  campaignId  String
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  order       Int
+  delayDays   Int      @default(0)
+  subject     String
+  body        String
   attachments String? // JSON: [{ name, path, size, type }] — files under uploads/intubtool/attachments
 
   @@unique([campaignId, order])
@@ -260,29 +261,29 @@ model CampaignLead {
 }
 
 model EmailMessage {
-  id            String    @id @default(cuid())
-  campaignId    String?
-  campaign      Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
-  leadId        String?
-  lead          Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
-  stepOrder     Int       @default(0)
-  messageId     String    @unique
-  toEmail       String
-  subject       String
-  bodyHtml      String
-  bodyText      String
-  status        String    @default("sent") // sent | failed | bounced
-  error         String?
-  spamScore     Int?
-  aiPersonalized Boolean  @default(false)
-  sentAt        DateTime  @default(now())
-  openCount     Int       @default(0)
-  firstOpenedAt DateTime?
-  lastOpenedAt  DateTime?
-  repliedAt     DateTime?
-  replySnippet  String?
-  bouncedAt     DateTime?
-  bounceReason  String?
+  id             String    @id @default(cuid())
+  campaignId     String?
+  campaign       Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  leadId         String?
+  lead           Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  stepOrder      Int       @default(0)
+  messageId      String    @unique
+  toEmail        String
+  subject        String
+  bodyHtml       String
+  bodyText       String
+  status         String    @default("sent") // sent | failed | bounced
+  error          String?
+  spamScore      Int?
+  aiPersonalized Boolean   @default(false)
+  sentAt         DateTime  @default(now())
+  openCount      Int       @default(0)
+  firstOpenedAt  DateTime?
+  lastOpenedAt   DateTime?
+  repliedAt      DateTime?
+  replySnippet   String?
+  bouncedAt      DateTime?
+  bounceReason   String?
 
   @@index([campaignId, sentAt])
   @@index([toEmail])
@@ -291,49 +292,49 @@ model EmailMessage {
 // ───────────── Multi-account send (admin-only, separate from campaigns) ─────────────
 
 model Blast {
-  id               String    @id @default(cuid())
+  id               String         @id @default(cuid())
   name             String
-  status           String    @default("draft") // draft | running | idle | paused | completed
-  templates        String    @default("[]") // JSON [{subject, body}] — rotated across accounts (A/B)
-  followUpEnabled  Boolean   @default(false)
-  followUpDays     Int       @default(4)
-  followUpSubject  String    @default("")
-  followUpBody     String    @default("")
-  gapMinSeconds    Int       @default(120)
-  gapMaxSeconds    Int       @default(300)
-  sendWindowStart  Int       @default(9)
-  sendWindowEnd    Int       @default(18)
+  status           String         @default("draft") // draft | running | idle | paused | completed
+  templates        String         @default("[]") // JSON [{subject, body}] — rotated across accounts (A/B)
+  followUpEnabled  Boolean        @default(false)
+  followUpDays     Int            @default(4)
+  followUpSubject  String         @default("")
+  followUpBody     String         @default("")
+  gapMinSeconds    Int            @default(120)
+  gapMaxSeconds    Int            @default(300)
+  sendWindowStart  Int            @default(9)
+  sendWindowEnd    Int            @default(18)
   autoRunHour      Int? // null = manual Start only
   lastAutoRunDate  String?
-  trackOpens       Boolean   @default(true)
-  trackClicks      Boolean   @default(true)
-  verifyBeforeSend Boolean   @default(true)
+  trackOpens       Boolean        @default(true)
+  trackClicks      Boolean        @default(true)
+  verifyBeforeSend Boolean        @default(true)
   summaryEmail     String?
-  summaryHour      Int       @default(19)
+  summaryHour      Int            @default(19)
   lastSummaryDate  String?
   lastRunAt        DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
   accounts         BlastAccount[]
   leads            BlastLead[]
   messages         BlastMessage[]
 }
 
 model BlastAccount {
-  id              String    @id @default(cuid())
+  id              String         @id @default(cuid())
   blastId         String
-  blast           Blast     @relation(fields: [blastId], references: [id], onDelete: Cascade)
+  blast           Blast          @relation(fields: [blastId], references: [id], onDelete: Cascade)
   ownerKey        String // user id, or "global" for the admin Gmail
   ownerId         String?
   email           String
   label           String?
   order           Int
-  enabled         Boolean   @default(true)
-  quota           Int       @default(10)
-  warmup          Boolean   @default(false)
-  warmupStart     Int       @default(5)
-  warmupStep      Int       @default(5)
-  warmupEveryDays Int       @default(2)
+  enabled         Boolean        @default(true)
+  quota           Int            @default(10)
+  warmup          Boolean        @default(false)
+  warmupStart     Int            @default(5)
+  warmupStep      Int            @default(5)
+  warmupEveryDays Int            @default(2)
   warmupStartedAt DateTime?
   nextAllowedAt   DateTime?
   blockedUntil    DateTime?
@@ -347,33 +348,33 @@ model BlastAccount {
 }
 
 model BlastLead {
-  id             String    @id @default(cuid())
+  id             String         @id @default(cuid())
   blastId        String
-  blast          Blast     @relation(fields: [blastId], references: [id], onDelete: Cascade)
+  blast          Blast          @relation(fields: [blastId], references: [id], onDelete: Cascade)
   serial         Int
   email          String
-  fullName       String    @default("")
+  fullName       String         @default("")
   firstName      String?
   company        String?
   title          String?
   phone          String?
   extra          String? // JSON of other uploaded columns
-  status         String    @default("pending") // pending | queued | sent | replied | bounced | unsubscribed | failed | skipped | hold | invalid
+  status         String         @default("pending") // pending | queued | sent | replied | bounced | unsubscribed | failed | skipped | hold | invalid
   statusNote     String?
-  verifyStatus   String    @default("none") // none | valid | risky | invalid
-  vip            Boolean   @default(false)
+  verifyStatus   String         @default("none") // none | valid | risky | invalid
+  vip            Boolean        @default(false)
   replyTag       String? // hot | cold
   notes          String?
   accountId      String?
-  account        BlastAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  account        BlastAccount?  @relation(fields: [accountId], references: [id], onDelete: SetNull)
   sentAt         DateTime?
   followUpAt     DateTime?
   followUpSentAt DateTime?
   repliedAt      DateTime?
   bouncedAt      DateTime?
-  unsubToken     String    @unique @default(cuid())
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  unsubToken     String         @unique @default(cuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   messages       BlastMessage[]
 
   @@unique([blastId, serial])
@@ -383,27 +384,27 @@ model BlastLead {
 }
 
 model BlastMessage {
-  id             String    @id @default(cuid())
+  id             String        @id @default(cuid())
   blastId        String
-  blast          Blast     @relation(fields: [blastId], references: [id], onDelete: Cascade)
+  blast          Blast         @relation(fields: [blastId], references: [id], onDelete: Cascade)
   leadId         String
-  lead           BlastLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  lead           BlastLead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   accountId      String?
   account        BlastAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
   ownerKey       String
   fromEmail      String
-  kind           String    @default("initial") // initial | followup | test
-  variant        Int       @default(0)
-  messageId      String    @unique
+  kind           String        @default("initial") // initial | followup | test
+  variant        Int           @default(0)
+  messageId      String        @unique
   toEmail        String
   subject        String
   bodyText       String
-  status         String    @default("sent") // sent | failed | bounced
+  status         String        @default("sent") // sent | failed | bounced
   error          String?
-  sentAt         DateTime  @default(now())
-  openCount      Int       @default(0)
+  sentAt         DateTime      @default(now())
+  openCount      Int           @default(0)
   firstOpenedAt  DateTime?
-  clickCount     Int       @default(0)
+  clickCount     Int           @default(0)
   firstClickedAt DateTime?
   repliedAt      DateTime?
   replySnippet   String?
@@ -426,4 +427,39 @@ model AccountEvent {
 
   @@index([ownerKey, createdAt])
   @@index([createdAt])
+}
+
+model Meeting {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  topic       String?
+  message     String?
+  slotAt      DateTime
+  durationMin Int      @default(30)
+  status      String   @default("requested") // requested | confirmed | done | cancelled | no_show
+  source      String? // e.g. campaign link
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slotAt])
+  @@index([email])
+}
+
+model SavedSearch {
+  id           String    @id @default(cuid())
+  ownerId      String?
+  name         String
+  template     String // JSON: SearchJob fields to clone (companies, keywords, source, mode, filters, maxPerCompany, listId)
+  intervalDays Int       @default(7)
+  active       Boolean   @default(true)
+  lastRunAt    DateTime?
+  nextRunAt    DateTime?
+  lastJobId    String?
+  runs         Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  @@index([active, nextRunAt])
 }

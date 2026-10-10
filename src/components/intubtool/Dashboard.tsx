@@ -35,7 +35,7 @@ export default function Dashboard() {
   return (
     <>
       <PageHeader
-        title="IntubTool"
+        title="Bainsla Mail Tool"
         description="Company → matching employees (LinkedIn) → your database → SalesQL only when missing → Gmail outreach with tracking."
         actions={
           <>

@@ -4,15 +4,18 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { LayoutDashboard, Search, Users, Mail, Settings, LogOut, Menu, X, ArrowLeft, UserCheck, Layers } from "lucide-react";
+import { LayoutDashboard, Search, Users, Mail, Settings, LogOut, Menu, X, ArrowLeft, UserCheck, Layers, CalendarCheck, BellRing, Inbox } from "lucide-react";
 
 type NavItem = { href: string; label: string; icon: typeof Search; exact?: boolean; admin?: boolean };
 
 const nav: NavItem[] = [
   { href: "/intubtool", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/intubtool/inbox", label: "Gmail Inbox", icon: Inbox },
   { href: "/intubtool/search", label: "LinkedIn Search", icon: Search },
   { href: "/intubtool/leads", label: "Leads Database", icon: Users },
+  { href: "/intubtool/saved-searches", label: "Saved Searches", icon: BellRing },
   { href: "/intubtool/campaigns", label: "Email Campaigns", icon: Mail },
+  { href: "/intubtool/meetings", label: "Meetings", icon: CalendarCheck, admin: true },
   { href: "/intubtool/multi-send", label: "Multi-account Send", icon: Layers, admin: true },
   { href: "/intubtool/users", label: "Users", icon: UserCheck, admin: true },
   { href: "/intubtool/settings", label: "Settings", icon: Settings },
@@ -63,7 +66,7 @@ export default function ToolShell({
     <Link href="/intubtool" className="flex items-center gap-2 px-2">
       <span className="h-8 w-8 rounded-lg bg-gradient-to-br from-cyan-400 via-sky-500 to-violet-600" />
       <span className="font-extrabold tracking-tight">
-        Intub<span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">Tool</span>
+        Bainsla <span className="bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">Mail Tool</span>
       </span>
     </Link>
   );

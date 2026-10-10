@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AuthCard from "../AuthCard";
 import SignupForm from "./SignupForm";
 
-export const metadata: Metadata = { title: "Create account · IntubTool", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Create account · Bainsla Mail Tool", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default function ToolSignupPage() {

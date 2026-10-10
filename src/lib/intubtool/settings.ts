@@ -33,6 +33,12 @@ export const SETTING_KEYS = [
   "alert_email",
   "alert_whatsapp_phone",
   "health_check_hour",
+  "booking_title",
+  "booking_intro",
+  "booking_duration_min",
+  "booking_days",
+  "booking_start_hour",
+  "booking_end_hour",
 ] as const;
 
 /** keys every member has their own copy of (Gmail connection + sender identity); everything else is admin/global */
@@ -79,6 +85,12 @@ const DEFAULTS: Partial<ToolSettings> = {
   default_daily_limit: "40",
   imap_poll_minutes: "10",
   health_check_hour: "8",
+  booking_title: "Book a call with Bainsla Music",
+  booking_intro: "Pick a time that suits you. We'll call you on WhatsApp/phone or share a Google Meet link.",
+  booking_duration_min: "30",
+  booking_days: "1,2,3,4,5,6",
+  booking_start_hour: "11",
+  booking_end_hour: "19",
   unsubscribe_text: "If you'd prefer not to hear from me again, just reply \"unsubscribe\" or click here: {{unsubscribe_url}}",
 };
 

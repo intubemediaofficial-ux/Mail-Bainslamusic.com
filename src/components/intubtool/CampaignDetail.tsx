@@ -29,7 +29,7 @@ const MAX_STEP_BYTES = 20 * 1024 * 1024;
 type CL = { id: string; status: string; currentStep: number; nextSendAt: string | null; lastSentAt: string | null; lead: { id: string; fullName: string; company: string; title: string | null; email: string | null; unsubscribed: boolean } };
 type Msg = { id: string; toEmail: string; subject: string; status: string; error: string | null; sentAt: string; openCount: number; repliedAt: string | null; replySnippet: string | null; bouncedAt: string | null; bounceReason: string | null; spamScore: number | null; aiPersonalized: boolean; stepOrder: number; lead: { fullName: string; company: string } | null };
 type Campaign = {
-  id: string; name: string; status: string; fromName: string | null; replyTo: string | null; cc: string | null; bcc: string | null; dailyLimit: number; sendWindowStart: number; sendWindowEnd: number; minGapSeconds: number;
+  id: string; name: string; status: string; fromName: string | null; fromEmail: string | null; replyTo: string | null; cc: string | null; bcc: string | null; dailyLimit: number; sendWindowStart: number; sendWindowEnd: number; minGapSeconds: number;
   trackOpens: boolean; personalMode: boolean; aiPersonalize: boolean; aiInstructions: string | null; stopOnReply: boolean; steps: Step[]; leads: CL[]; messages: Msg[];
   stats: { sent: number; opened: number; replied: number; bounced: number; pending: number; failed: number };
 };
@@ -50,6 +50,10 @@ export default function CampaignDetail({ id }: { id: string }) {
   const [addOpen, setAddOpen] = useState(false);
   const [leadQ, setLeadQ] = useState("");
   const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [senders, setSenders] = useState<{ main: string; aliases: string[] } | null>(null);
+  useEffect(() => {
+    api<{ main: string; aliases: string[] }>("/api/intubtool/mailbox/senders").then(setSenders).catch(() => setSenders(null));
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -297,6 +301,22 @@ export default function CampaignDetail({ id }: { id: string }) {
               <h3 className="font-semibold">Sending</h3>
               <Field label="Campaign name"><Input value={g("name")} onChange={(e) => set("name", e.target.value)} /></Field>
               <Field label="From name"><Input value={g("fromName") || ""} onChange={(e) => set("fromName", e.target.value)} placeholder="uses Settings default" /></Field>
+              <Field label="Send from" hint="Label ids work only after adding them in Gmail → Settings → Accounts → “Send mail as”; otherwise Gmail sends from the main id.">
+                <div className="space-y-1.5 rounded-xl border border-white/10 p-2">
+                  {[
+                    { v: "", label: senders?.main || "Connected Gmail (main id)" },
+                    ...(senders?.aliases ?? []).map((a) => ({ v: a, label: a })),
+                    ...(g("fromEmail") && !(senders?.aliases ?? []).includes(g("fromEmail") as string) ? [{ v: g("fromEmail") as string, label: g("fromEmail") as string }] : []),
+                  ].map((o) => (
+                    <label key={o.v || "main"} className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-white/5">
+                      <input type="radio" name="fromEmail" className="accent-amber-400" checked={(g("fromEmail") || "") === o.v} onChange={() => set("fromEmail", o.v)} />
+                      <span className="truncate">{o.label}</span>
+                      {!o.v && <Badge tone="green">main</Badge>}
+                    </label>
+                  ))}
+                  {!senders && <p className="px-2 text-xs text-white/40">Connect Gmail in Settings to load label ids.</p>}
+                </div>
+              </Field>
               <Field label="CC" hint="Visible to the recipient; comma-separate multiple"><Input value={g("cc") || ""} onChange={(e) => set("cc", e.target.value)} /></Field>
               <Field label="BCC" hint="Default from Settings"><Input value={g("bcc") || ""} onChange={(e) => set("bcc", e.target.value)} /></Field>
               <Field label="Reply-to"><Input value={g("replyTo") || ""} onChange={(e) => set("replyTo", e.target.value)} /></Field>
